@@ -23,9 +23,9 @@ koa.use(router.middleware());
 
 ## Modified API
 
-### router.on(method, path, [opts,] ...handlers)
+### router.on(method, path, [opts,] ...handlers[, store])
 
-Defines a route, there are also shorthand methods available. Since koa already provides state management using `ctx`, support for `store` was removed.
+Defines a route, there are also shorthand methods available. Since koa already provides state management using `ctx`, using `store` is discouraged.
 
 ```javascript
 

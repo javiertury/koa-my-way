@@ -1,7 +1,7 @@
 {
   "name": "koa-my-way",
   "description": "Find-my-way router for Koa",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Javier Garcia <javiertury@gmail.com>",
   "main": "index.js",
   "license": "MIT",

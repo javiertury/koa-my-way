@@ -49,13 +49,18 @@ KoaRouter.prototype.on = function on (method, path, opts, ...handlers) {
     handlers.unshift(opts);
     opts = {};
   }
+  let store;
+  if (handlers.length && typeof handlers[handlers.length -1] !== 'function') {
+    store = handlers.pop();
+  }
+
   if (!handlers.length) {
     throw new Error(`A handler must be defined for ${method} - ${path}`);
   }
 
   const handler = handlers.length > 1 ? compose(handlers) : handlers[0];
 
-  Router.prototype.on.call(this, method, path, opts, handler);
+  Router.prototype.on.call(this, method, path, opts, handler, store);
 
   return this;
 };

@@ -102,6 +102,38 @@ describe('"on" method', () => {
     support.checkDeclaredRoutes(route, router.routes);
   });
 
+  it('should process routes with store', () => {
+    const router = new Router();
+    const route = {
+      method: ['GET', 'HEAD', 'POST'],
+      path: '/',
+      handler: function handler0 (ctx, next) { return next(); },
+      store: {},
+    };
+    support.spyRoute(route);
+
+    router.on(route.method, route.path, route.handler, route.store);
+    support.checkDeclaredRoutes(route, router.routes);
+  });
+
+  it('should process routes with multiple methods and store', () => {
+    const router = new Router();
+    const route = {
+      method: ['GET', 'HEAD', 'POST'],
+      path: '/',
+      handler: [
+        function handler0 (ctx, next) { return next(); },
+        function handler1 (ctx, next) { return next(); },
+        function handler2 (ctx, next) { return next(); },
+      ],
+      store: {},
+    };
+    support.spyRoute(route);
+
+    router.on(route.method, route.path, route.handler[0], route.handler[1], route.handler[2], route.store);
+    support.checkDeclaredRoutes(route, router.routes);
+  });
+
   it('Is chainable', () => {
     // One handler
     const router = new Router();
