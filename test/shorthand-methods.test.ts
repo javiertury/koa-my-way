@@ -1,10 +1,9 @@
-'use strict';
-
-const chai = require('chai'),
-  expect = chai.expect,
-  support = require('./support'),
-  httpMethods = require('http').METHODS,
-  Router = require('../index');
+import { Middleware } from 'koa';
+import Router, { httpMethods, InstanceRoute, KoaRoute, ShortHandMethodName } from '../src/router';
+import {
+  spyRoute,
+  checkDeclaredRoutes
+} from './support';
 
 describe('Shorthand methods', () => {
 
@@ -17,15 +16,16 @@ describe('Shorthand methods', () => {
   it('should process routes', () => {
     httpMethods.forEach(method => {
       const router = new Router();
-      const route = {
+      const route: InstanceRoute = {
         method: method,
         path: '/',
-        handler: function handler0 (ctx, next) { return next(); },
+        opts: {},
+        handler: (_ctx, next) => { return next(); }
       };
-      support.spyRoute(route);
+      spyRoute(route);
 
-      router[method.toLowerCase()](route.path, route.handler);
-      support.checkDeclaredRoutes(route, router.routes);
+      router[method.toLowerCase() as ShortHandMethodName](route.path, route.handler);
+      checkDeclaredRoutes(route, router.routes);
     });
   });
 
@@ -40,10 +40,10 @@ describe('Shorthand methods', () => {
         },
         handler: function handler0 (ctx, next) { return next(); },
       };
-      support.spyRoute(route);
+      spyRoute(route);
 
       router[method.toLowerCase()](route.path, route.opts, route.handler);
-      support.checkDeclaredRoutes(route, router.routes);
+      checkDeclaredRoutes(route, router.routes);
     });
   });
 
@@ -59,10 +59,10 @@ describe('Shorthand methods', () => {
           function handler2 (ctx, next) { return next(); },
         ],
       };
-      support.spyRoute(route);
+      spyRoute(route);
 
       router[method.toLowerCase()](route.path, route.handler[0], route.handler[1], route.handler[2]);
-      support.checkDeclaredRoutes(route, router.routes);
+      checkDeclaredRoutes(route, router.routes);
     });
   });
 
@@ -81,10 +81,10 @@ describe('Shorthand methods', () => {
           function handler2 (ctx, next) { return next(); },
         ],
       };
-      support.spyRoute(route);
+      spyRoute(route);
 
       router[method.toLowerCase()](route.path, route.opts, route.handler[0], route.handler[1], route.handler[2]);
-      support.checkDeclaredRoutes(route, router.routes);
+      checkDeclaredRoutes(route, router.routes);
     });
   });
 
@@ -113,10 +113,10 @@ describe('"all" shorthand method', () => {
       path: '/',
       handler: function handler0 (ctx, next) { return next(); },
     };
-    support.spyRoute(route);
+    spyRoute(route);
 
     router.all(route.path, route.handler);
-    support.checkDeclaredRoutes(route, router.routes);
+    checkDeclaredRoutes(route, router.routes);
   });
 
   it('should process routes with options', () => {
@@ -129,10 +129,10 @@ describe('"all" shorthand method', () => {
       },
       handler: function handler0 (ctx, next) { return next(); },
     };
-    support.spyRoute(route);
+    spyRoute(route);
 
     router.all(route.path, route.opts, route.handler);
-    support.checkDeclaredRoutes(route, router.routes);
+    checkDeclaredRoutes(route, router.routes);
   });
 
   it('should process routes with multiple handlers', () => {
@@ -146,10 +146,10 @@ describe('"all" shorthand method', () => {
         function handler2 (ctx, next) { return next(); },
       ],
     };
-    support.spyRoute(route);
+    spyRoute(route);
 
     router.all(route.path, route.handler[0], route.handler[1], route.handler[2]);
-    support.checkDeclaredRoutes(route, router.routes);
+    checkDeclaredRoutes(route, router.routes);
   });
 
   it('should process routes with options and multiple handlers', () => {
@@ -164,12 +164,12 @@ describe('"all" shorthand method', () => {
         function handler0 (ctx, next) { return next(); },
         function handler1 (ctx, next) { return next(); },
         function handler2 (ctx, next) { return next(); },
-      ],
+      ]
     };
-    support.spyRoute(route);
+    spyRoute(route);
 
     router.all(route.path, route.opts, route.handler[0], route.handler[1], route.handler[2]);
-    support.checkDeclaredRoutes(route, router.routes);
+    checkDeclaredRoutes(route, router.routes);
   });
 
   it('Is chainable', () => {

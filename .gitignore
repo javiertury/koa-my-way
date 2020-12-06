@@ -7,3 +7,4 @@ yarn.lock
 *.sublime*
 .DS_STORE
 npm-debug.log
+lib

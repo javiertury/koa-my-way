@@ -1,32 +1,19 @@
-'use strict';
+import { HTTPMethod, KoaRoute, InstanceRoute } from '../src/router';
 
-const chai = require('chai'),
-  expect = chai.expect,
-  sinon = require('sinon'),
-  sinonChai = require('sinon-chai');
-
-chai.use(sinonChai);
-
-function spyRoute (routes) {
-  [].concat(routes).forEach(route => {
+export const spyRoute = (routes: InstanceRoute | InstanceRoute[]) => {
+  routes.forEach(route => {
     if (!route.handler) {
       throw new Error('Route does not have handler');
     }
 
-    if (Array.isArray(route.handler)) {
-      route.handler = route.handler.map(h => {
-        return sinon.spy(h);
-      });
-    } else {
-      route.handler = sinon.spy(route.handler);
-    }
+    route.handler = sinon.spy(route.handler);
   });
-}
+};
 
-function checkDeclaredRoutes(origRoutes, declaredRoutes) {
+export const checkDeclaredRoutes = (origRoutes: KoaRoute[], declaredRoutes: KoaRoute[]) => {
   let i = 0;
 
-  [].concat(origRoutes).forEach(route => {
+  origRoutes.forEach(route => {
     [].concat(route.method).forEach(method => {
 
       const declared = declaredRoutes[i];
@@ -67,7 +54,7 @@ function checkDeclaredRoutes(origRoutes, declaredRoutes) {
   });
 }
 
-function createCtx(method, url) {
+export const createCtx = (method: HTTPMethod, url: string) => {
   return {
     req: {
       method: method,
@@ -75,12 +62,12 @@ function createCtx(method, url) {
       headers: {},
     },
     res: {
-      statusCode: 404,
+      statusCode: 404
     },
   };
-}
+};
 
-function checkRouteUsed(route, next) {
+export const checkRouteUsed = (route, next) => {
   route.handler.forEach(h => {
     expect(h).to.have.been.called;
     h.resetHistory();
@@ -90,9 +77,9 @@ function checkRouteUsed(route, next) {
     expect(next).to.have.been.called;
     next.resetHistory();
   }
-}
+};
 
-function checkRouteNotUsed(route, next) {
+export const checkRouteNotUsed = (route, next) => {
   route.handler.forEach(h => {
     expect(h).to.not.have.been.called;
   });
@@ -100,9 +87,9 @@ function checkRouteNotUsed(route, next) {
   if (next) {
     expect(next).to.not.have.been.called;
   }
-}
+};
 
-function checkDefaultUsed(defaultHandler, next) {
+export const checkDefaultUsed = (defaultHandler, next) => {
   expect(defaultHandler).to.have.been.called;
   defaultHandler.resetHistory();
 
@@ -110,22 +97,12 @@ function checkDefaultUsed(defaultHandler, next) {
     expect(next).to.have.been.called;
     next.resetHistory();
   }
-}
+};
 
-function checkDefaultNotUsed(defaultHandler, next) {
+export const checkDefaultNotUsed = (defaultHandler, next) => {
   expect(defaultHandler).to.not.have.been.called;
 
   if (next) {
     expect(next).to.not.have.been.called;
   }
-}
-
-module.exports = {
-  spyRoute,
-  checkDeclaredRoutes,
-  createCtx,
-  checkRouteUsed,
-  checkRouteNotUsed,
-  checkDefaultUsed,
-  checkDefaultNotUsed,
 };
