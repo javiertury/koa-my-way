@@ -1,3 +1,7 @@
+# DEPRECATED
+
+There are better solutions out there, notably [koa-tree-router](https://github.com/steambap/koa-tree-router). Creating a radix-tree router for Koa is, in my opinion, a better alternative than adapting [find-my-way](https://github.com/delvedor/find-my-way/) for Koa. Some configuration options, `onBadUrl` and `versioning.deriveVersion`, cannot accept Koa middlewares without forking the whole project.
+
 # koa-my-way
 
 Adaptation of [find-my-way](https://github.com/delvedor/find-my-way) that uses koa middlewares. Also, it can import routes defined by [route-imperator](https://github.com/javiertury/route-imperator).
